@@ -60,31 +60,43 @@ def get_boto_client():
 def get_sites_array_from_s3():
     s3 = boto3.client('s3')
     s3_resource = s3.get_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME)
-    json_data = json.loads(s3_resource.get('Body').read())
-    print(json_data)
-    return json_data
+    sites_array = json.loads(s3_resource.get('Body').read())
+    return sites_array
 
 def list_sites():
-    json_data = get_sites_from_s3()
-    urls = []
-    for index, site in enumerate(json_data):
-        if site['enabled']:
-            urls.append({index, site['url']})
-    print(json)
+    sites_array = get_sites_array_from_s3()
+    output = ""
+    for index, site in enumerate(sites_array):
+        # TODO find smarter way to do inline if althogh it's python
+        status = "disabled"
+        if site["enabled"]:
+            status = "enabled"
+        output += f"{index} : \"{site['keyword']}\" keyword, {status} {site['url']}"
+        print(f"got sites list: {sites_array}")
+    print(output)
     # bot.send_message(chat_id=update.message.chat_id, text='\n'.join(json.dumps(urls)))
 
 def stop_site(bot, update, args):
-    json_data = get_sites_from_s3()
+    json_data = get_sites_array_from_s3()
     for site in json_data:
         if site['keyword'] == args[0]:
             site['enabled'] = False
             s3 = get_boto_client()
             s3.put_object(Bucket=BUCKET_NAME, Key='sites.json', Body=json.dumps(json_data))
-            bot.send_message(chat_id=update.message.chat_id, text='Site {} stopped.'.format(site['url']))
+            # bot.send_message(chat_id=update.message.chat_id, text='Site {} stopped.'.format(site['url']))
             break
 
 def resume_site(site_keyword):
-    json_data = get_sites_from_s3()
+    json_data = get_sites_array_from_s3()
+    for site in json_data:
+        if site['keyword'] == site_keyword:
+            site['enabled'] = True
+            s3 = get_boto_client()
+            s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
+            break
+
+def add_site(site_keyword):
+    json_data = get_sites_array_from_s3()
     for site in json_data:
         if site['keyword'] == site_keyword:
             site['enabled'] = True
