@@ -51,6 +51,7 @@ def respond_to_webhook(event, context):
 # TODO- remove
 
 def get_boto_client():
+    print('connecting to s3')
     # return boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_ACCESS_SECRET, region_name="us-east-1")
     return boto3.client('s3')
     # TODO: make use ACL / AWS  policy and not public bucket
@@ -71,38 +72,46 @@ def list_sites():
         status = "disabled"
         if site["enabled"]:
             status = "enabled"
-        output += f"{index} : \"{site['keyword']}\" keyword, {status} {site['url']}"
-        print(f"got sites list: {sites_array}")
+        output += f"{index} : \"{site['keyword']}\" keyword, {status} {site['url']}\n"
+    # print(f"got sites list: {sites_array}")
+    # print to user:
     print(output)
     # bot.send_message(chat_id=update.message.chat_id, text='\n'.join(json.dumps(urls)))
 
-def stop_site(bot, update, args):
+def stop_site(site_id):
     json_data = get_sites_array_from_s3()
-    for site in json_data:
-        if site['keyword'] == args[0]:
-            site['enabled'] = False
+    for i, site in enumerate(json_data):
+        if str(i) == site_id:
+            print(f"found site to stop: {site}")
+            site['enabled'] = "false"
             s3 = get_boto_client()
-            s3.put_object(Bucket=BUCKET_NAME, Key='sites.json', Body=json.dumps(json_data))
+            s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
             # bot.send_message(chat_id=update.message.chat_id, text='Site {} stopped.'.format(site['url']))
             break
 
-def resume_site(site_keyword):
-    json_data = get_sites_array_from_s3()
-    for site in json_data:
-        if site['keyword'] == site_keyword:
-            site['enabled'] = True
-            s3 = get_boto_client()
-            s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
-            break
 
-def add_site(site_keyword):
+def resume_site(site_id):
     json_data = get_sites_array_from_s3()
-    for site in json_data:
-        if site['keyword'] == site_keyword:
-            site['enabled'] = True
-            s3 = get_boto_client()
-            s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
-            break
+    for i, site in enumerate(json_data):
+        if str(i) == site_id:
+            if site['enabled'] == "false":
+                print(f"resuming site {site_id}")
+                site['enabled'] = "true"
+                s3 = get_boto_client()
+                s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
+                # TODO : print message to telegram chat
+                break
+
+
+def add_site(keyword, url):
+    json_data = get_sites_array_from_s3()
+    json_data.append({"url": url, "keyword": keyword, "enabled": "true"})
+    print(f"adding new site : {keyword} {url}")
+    s3 = get_boto_client()
+    print(f"writing new json with added site to s3 bucket")
+    s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
+    print(f"Site was added successfully! it's enabled automatically, \nRun /list to see all sites")
+
 
 def sendBotMessage(text):
     chat_id = "856026537"
@@ -110,7 +119,38 @@ def sendBotMessage(text):
     url = BASE_URL + "/sendMessage"
     requests.post(url, data=data)
 
+
+def print_helper():
+    messsage = """Shopper - Telegram shopping bot! \n " 
+    "supported commands: /list - see a list of all the sites\n" 
+    /add [keyword] [url] - add new site with keyword to search and url of website"\n 
+    "/resume [index] - resume the bot of a specific site by index from list"\n
+    "/stop  - stop the bot of a specific site by index from list" """
+    print(f"")
+
 def main():
+    message = "/help"
+    #  TODO - use legit parser here to parse like a normal humanbeing and not like a peasant
+    if message == "/list" :
+        list_sites()
+    elif message.startswith("/add"):
+        arguments = message.split(" ")
+        keyword = arguments[1]
+        url = arguments[2]
+        add_site(keyword, url)
+    elif message.startswith("/resume"):
+        arguments = message.split(" ")
+        site_id = str(arguments[1])
+        resume_site(site_id)
+    elif message.startswith("/stop"):
+        arguments = message.split(" ")
+        site_id = str(arguments[1])
+        stop_site(site_id)
+    elif message == "/help":
+        print_helper()
+    else:
+        print(f"Unsupported command.\n {message}")
+        print_helper()
     list_sites()
 
     # Telegram Bot Authorization Token
@@ -139,6 +179,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-def is_in_stock(url, keyword):
-    return 0
