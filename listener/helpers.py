@@ -97,11 +97,5 @@ def send_bot_message(text):
 
 
 def get_helper_message():
-    message = """Shopper - Telegram shopping bot! \n\nSupported commands:\n/list - see a list of all the sites\n
-    /add€[keyword]€[url] - add new site with keyword of 'missing item' to search and url of website.\n
-    When the 'missing-item-message' won't be found in the webpage anymore - you'll get a notification and know that the item is in stock!!
-    /resume€[index] - resume the bot of a specific site by index from list\n
-    /stop€[index]  - stop the bot of a specific site by index from list\n
-    /delete€[index]  - delete the bot of a specific site by index from list\n
-    Note that we use the character € as a space in a command"""
+    message = """Shopper - Telegram shopping bot! \n\nSupported commands:\n/list - see a list of all the sites\n/add [keyword] [url] - add new site with keyword of 'missing item' to search and url of website.\nWhen the 'missing-item-message' won't be found in the webpage anymore - you'll get a notification and know that the item is in stock!!/resume [index] - resume the bot of a specific site by index from list\n/stop [index]  - stop the bot of a specific site by index from list\n/delete [index]  - delete the bot of a specific site by index from list"""
     return message

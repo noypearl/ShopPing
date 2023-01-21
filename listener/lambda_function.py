@@ -49,7 +49,7 @@ def lambda_handler(event, context):
         bot_response = user_message_to_bot_response(text)
     except IndexError:
         print("Got invalid command")
-        bot_response = "Got invalid command. Use € as a separator "
+        bot_response = "Got invalid command."
     helpers.send_bot_message(bot_response, )
     return {
     'statusCode': 200,
