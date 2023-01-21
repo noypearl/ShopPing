@@ -80,6 +80,19 @@ def add_site(keyword, url):
     return "Site was added successfully! it's enabled automatically, \nRun /list to see all sites"
 
 
+def delete_site(site_id):
+    json_data = get_sites_array_from_s3()
+    for i, site in enumerate(json_data):
+        if str(i) == site_id:
+            print(f"found site to delete: {site}")
+            del json_data[i]
+            s3 = get_boto_client()
+            print("Updating bucket after deleted site id {site_id}")
+            s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
+            return f"Site with id {site_id} was deleted.\nRun /list to see all sites"
+    return f"Site id {site_id} wasn't found. Are you trolling me?"
+
+
 def send_bot_message(text):
     data = {"text": text, "chat_id": CHAT_ID}
     url = BASE_URL + "/sendMessage"
@@ -91,5 +104,6 @@ def get_helper_message():
     /add€[keyword]€[url] - add new site with keyword to search and url of website\n 
     /resume€[index] - resume the bot of a specific site by index from list\n
     /stop€[index]  - stop the bot of a specific site by index from list\n
+    /delete€[index]  - delete the bot of a specific site by index from list\n
     Note that we use the character € as a space in a command"""
     return message

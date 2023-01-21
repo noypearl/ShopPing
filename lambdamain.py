@@ -35,6 +35,7 @@ def user_message_to_bot_response(message):
         return f"Unsupported command {message}.\n{helpers.get_helper_message()}"
 
 def lambda_handler(event, context):
+    text = "/resume 1"
     print(f"event! {json.dumps(event)}")
     data = json.loads(event["body"])
     message = data["message"]
@@ -50,3 +51,4 @@ def lambda_handler(event, context):
     'statusCode': 200,
     'body': bot_response
     }
+lambda_handler(1,1)
