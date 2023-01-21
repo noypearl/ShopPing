@@ -1,5 +1,10 @@
-name: deploy to lambda
-on: [push]
+name: Trigger deployment for Parser lambda
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'cron_parser/**'
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -7,7 +12,7 @@ jobs:
           - uses: actions/checkout@v1
           - run: ls -lsa
           - name: Building zip
-            run: zip -r -j ${{ vars.ZIP_FILENAME }} listener/*.py
+            run: zip -r -j ${{ vars.ZIP_PARSER_FILENAME }} cron_parser/*.py
           - name: Fix aws CLI issue by installing it
             run: sudo apt-get install python3-setuptools && python3 -m pip install --user awscli
           - name: Configure AWS credentials
@@ -16,7 +21,7 @@ jobs:
               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               aws-region: ${{ secrets.AWS_REGION }}
-          - name: Upload zip to s3 bucket ${{ vars.MENU_LAMBDA_FUNCTION_NAME }}
-            run: aws s3 cp ${{ vars.ZIP_FILENAME }} s3://${{ vars.S3_DEPLOYMENT_BUCKET_NAME }}/${{ vars.ZIP_FILENAME }}
+          - name: Upload zip to s3 bucket ${{ vars.PARSER_LAMBDA_FUNCTION_NAME }}
+            run: aws s3 cp ${{ vars.ZIP_PARSER_FILENAME }} s3://${{ vars.S3_DEPLOYMENT_BUCKET_NAME }}/${{ vars.ZIP_PARSER_FILENAME }}
           - name: Upload code to Lambda from zip
-            run: aws lambda update-function-code --function-name ${{ vars.MENU_LAMBDA_FUNCTION_NAME }} --zip-file fileb://${{ vars.ZIP_FILENAME }}
+            run: aws lambda update-function-code --function-name ${{ vars.PARSER_LAMBDA_FUNCTION_NAME }} --zip-file fileb://${{ vars.ZIP_PARSER_FILENAME }}
