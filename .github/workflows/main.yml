@@ -8,6 +8,7 @@ jobs:
       - run: ls -lsa
       - run: zip -r ${{ vars.ZIP_FILENAME }} listener/*.py
   aws:
+    needs: zip
     runs-on: ubuntu-latest
     steps:
       - name: Fix aws CLI issue by installing it
