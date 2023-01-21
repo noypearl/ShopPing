@@ -6,8 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: zip
-      - run: ls -lsa /github/workspace
         uses: montudor/action-zip@v0.1.0
+        run: ls -lsa /github/workspace
         with:
           args: zip -r output.zip *.py
   deploy:
