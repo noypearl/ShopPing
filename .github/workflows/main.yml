@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - run: ls -lsa /github/workspace
       - name: zip
         uses: montudor/action-zip@v0.1.0
-        run: ls -lsa /github/workspace
         with:
           args: zip -r output.zip *.py
   deploy:
