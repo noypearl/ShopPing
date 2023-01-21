@@ -26,7 +26,7 @@ def get_sites_array_from_s3():
 def list_sites():
     sites_array = get_sites_array_from_s3()
     print(f"sites array: {sites_array}")
-    output = "MEV"
+    output = ""
     for index, site in enumerate(sites_array):
         # TODO find smarter way to do inline if althogh it's python
         domain = urlparse(site['url']).netloc
