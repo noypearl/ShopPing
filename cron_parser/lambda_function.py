@@ -34,7 +34,11 @@ def notify_if_hit(site_obj):
     if site_obj['enabled'] == "false":
         print(f"Site is disabled - {site_obj['url']}.Skipping..")
         return
-    response = requests.get(site_obj['url'])
+    try:
+        response = requests.get(site_obj['url'])
+    except ConnectionError:
+        print(f"Issue with getting website {site_obj['url']}, Skipping...")
+        return
     if response.status_code == 200:
         html = response.text
         if not site_obj['keyword'] in html:
