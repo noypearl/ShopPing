@@ -6,11 +6,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: ls -lsa
-#      - run: "zip -r output.zip *.py"
-      - name: zip
-        uses: montudor/action-zip@v0.1.0
-        with:
-          args: zip -r output.zip *.py
+      - run: "zip -r output.zip *.py"
+#      - name: zip
+#        uses: montudor/action-zip@v0.1.0
+#        with:
+#          args: zip -r output.zip *.py
       - name: AWS Lambda Deploy
         uses: appleboy/lambda-action@master
         with:
