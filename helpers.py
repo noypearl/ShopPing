@@ -2,6 +2,7 @@ import json
 import os
 import requests
 import boto3
+from urllib.parse import urlparse
 
 BUCKET_NAME = os.environ['BUCKET_NAME']
 JSON_FILENAME = os.environ['JSON_FILENAME']
@@ -12,13 +13,8 @@ CHAT_ID = os.environ['CHAT_ID']
 
 def get_boto_client():
     print('connecting to s3')
-    # return boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_ACCESS_SECRET, region_name="us-east-1")
     return boto3.client('s3')
-    # TODO: make use ACL / AWS  policy and not public bucket
 
-
-#    TODO - remove hardcoded credentials
-#  TODO restrict access point of s3 bucket to only from lambda ond not PUBLIC
 
 def get_sites_array_from_s3():
     s3 = boto3.client('s3')
@@ -33,10 +29,11 @@ def list_sites():
     output = ""
     for index, site in enumerate(sites_array):
         # TODO find smarter way to do inline if althogh it's python
+        domain = urlparse(site['url']).netloc
         status = "disabled"
         if site["enabled"] == "true":
             status = "enabled"
-        output += f"{index} : \"{site['keyword']}\" keyword, {status} {site['url']}\n"
+        output += f"{index} : \"{site['keyword']}\" keyword, {status} {domain}\n"
     return output
 
 
@@ -77,7 +74,7 @@ def add_site(keyword, url):
     s3 = get_boto_client()
     print("writing new json with added site to s3 bucket")
     s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
-    return "Site was added successfully! it's enabled automatically, \nRun /list to see all sites"
+    return f"Site {url} was added successfully! it's enabled automatically, \nRun /list to see all sites"
 
 
 def delete_site(site_id):
@@ -90,7 +87,7 @@ def delete_site(site_id):
             print("Updating bucket after deleted site id {site_id}")
             s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
             return f"Site with id {site_id} was deleted.\nRun /list to see all sites"
-    return f"Site id {site_id} wasn't found. Are you trolling me?"
+    return f"Site id {site_id} isn't found. Are you trolling me?"
 
 
 def send_bot_message(text):
@@ -100,8 +97,9 @@ def send_bot_message(text):
 
 
 def get_helper_message():
-    message = """Shopper - Telegram shopping bot! \nSupported commands:\n/list - see a list of all the sites\n
-    /add€[keyword]€[url] - add new site with keyword to search and url of website\n 
+    message = """Shopper - Telegram shopping bot! \n\nSupported commands:\n/list - see a list of all the sites\n
+    /add€[keyword]€[url] - add new site with keyword of 'missing item' to search and url of website.\n
+    When the 'missing-item-message' won't be found in the webpage anymore - you'll get a notification and know that the item is in stock!!
     /resume€[index] - resume the bot of a specific site by index from list\n
     /stop€[index]  - stop the bot of a specific site by index from list\n
     /delete€[index]  - delete the bot of a specific site by index from list\n
