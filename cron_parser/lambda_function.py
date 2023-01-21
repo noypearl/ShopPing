@@ -41,7 +41,7 @@ def notify_if_hit(site_obj):
         return
     if response.status_code == 200:
         html = response.text
-        if not site_obj['keyword'] in html:
+        if not site_obj['keyword'].lower() in html.lower():
             print(f"HIT! found in stock {site_obj['url']} with keyword {site_obj['keyword']}")
             send_bot_message(f"FOUND! {site_obj['url']}")
 
