@@ -1,22 +1,22 @@
 name: deploy to lambda
 on: [push]
 jobs:
-
-  deploy:
-    name: deploy lambda function
-    runs-on: ubuntu-latest
+  zips:
     steps:
-    - name: zip
-      uses: montudor/action-zip@v0.1.0
-      with:
-        args: zip -r output.zip .
-    - uses: actions/checkout@v1
-    - name: AWS Lambda Deploy
-      uses: appleboy/lambda-action@master
-      with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: ${{ secrets.AWS_REGION }}
-        function_name: telegram_bot_listener
-        zip_file: output.zip
-        dry_run: true
+      - name: zip
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -r output.zip .
+  deploy:
+    needs: zips
+    steps:
+      - uses: actions/checkout@v1
+      - name: AWS Lambda Deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
+          function_name: telegram_bot_listener
+          zip_file: output.zip
+          dry_run: true
