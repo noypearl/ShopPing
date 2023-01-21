@@ -5,8 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: ls -lsa /github/workspace
-      working-directory: ./app
+      - run: ls -lsa .
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
