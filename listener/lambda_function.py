@@ -15,9 +15,9 @@ def user_message_to_bot_response(message):
     if message.startswith("/list") :
         return helpers.list_sites()
     elif message.startswith("/add"):
-        arguments = message.split(" ")
-        keyword = arguments[1]
-        url = arguments[2]
+        args_list = message.split(" ")
+        keyword = args_list[1:-1]
+        url = args_list[len(args_list)-1]
         return helpers.add_site(keyword, url)
     elif message.startswith("/resume"):
         arguments = message.split(" ")
