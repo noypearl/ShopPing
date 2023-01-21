@@ -7,32 +7,15 @@ jobs:
       - uses: actions/checkout@v1
       - run: ls -lsa
       - run: "zip -r output.zip *.py"
-      - run: aws s3 cp output.zip s3://deployment-telegram-bot-github-action/
+      - run: sudo apt-get install python3-setuptools
+      - run: python3 -m pip install --user awscli
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-#          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-#          role-external-id: ${{ secrets.AWS_ROLE_EXTERNAL_ID }}
-#          role-duration-seconds: 1200
-#          role-session-name: MySessionName
       - name: Upload zip to s3
         run: aws s3 cp output.zip s3://deployment-telegram-bot-github-action/output.zip
-
-#      - name: zip
-#        uses: montudor/action-zip@v0.1.0
-#        with:
-#          args: zip -r output.zip *.py
-#      - name: AWS Lambda Deploy
-#        uses: appleboy/lambda-action@master
-#        with:
-#          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-#          aws_secret_access_key: ${{ secrets.AWS_ACCESS_SECRET }}
-#          aws_region: ${{ secrets.AWS_REGION }}
-#          function_name: telegram_bot_listener
-#          zip_file: output.zip
-#          s3_bucket: deployment-telegram-bot-github-action
-#          dry_run: true
-
+      - name: Upload code to Lambda from zip
+        run: aws lambda update-function-code --function-name ${{MENU_LAMBDA_FUNCTION_NAME}} --zip-file fileb://output.zip
