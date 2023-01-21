@@ -2,22 +2,21 @@ name: deploy to lambda
 on: [push]
 jobs:
     deploy:
-    runs-on: ubuntu-latest
-    steps:
-#      generate zip
-      - uses: actions/checkout@v1
-      - run: ls -lsa
-      - run: zip -r ${{ vars.ZIP_FILENAME }} ./listener/*.py
-#      aws stuff
-      - name: Fix aws CLI issue by installing it
-        run: sudo apt-get install python3-setuptools && python3 -m pip install --user awscli
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Upload zip to s3 bucket ${{ vars.MENU_LAMBDA_FUNCTION_NAME }}
-        run: aws s3 cp ${{ vars.ZIP_FILENAME }} s3://${{ vars.S3_DEPLOYMENT_BUCKET_NAME }}/${{ vars.ZIP_FILENAME }}
-      - name: Upload code to Lambda from zip
-        run: aws lambda update-function-code --function-name ${{ vars.MENU_LAMBDA_FUNCTION_NAME }} --zip-file fileb://${{ vars.ZIP_FILENAME }}
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v1
+          - run: ls -lsa
+          - name: Building zip
+          - run: zip -r ${{ vars.ZIP_FILENAME }} listener/*.py
+          - name: Fix aws CLI issue by installing it
+            run: sudo apt-get install python3-setuptools && python3 -m pip install --user awscli
+          - name: Configure AWS credentials
+            uses: aws-actions/configure-aws-credentials@v1
+            with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ secrets.AWS_REGION }}
+          - name: Upload zip to s3 bucket ${{ vars.MENU_LAMBDA_FUNCTION_NAME }}
+            run: aws s3 cp ${{ vars.ZIP_FILENAME }} s3://${{ vars.S3_DEPLOYMENT_BUCKET_NAME }}/${{ vars.ZIP_FILENAME }}
+          - name: Upload code to Lambda from zip
+            run: aws lambda update-function-code --function-name ${{ vars.MENU_LAMBDA_FUNCTION_NAME }} --zip-file fileb://${{ vars.ZIP_FILENAME }}
