@@ -1,13 +1,13 @@
 name: deploy to lambda
 on: [push]
 jobs:
-  generate zip:
+  zip:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - run: ls -lsa
       - run: zip -r ${{ vars.ZIP_FILENAME }} listener/*.py
-  aws push:
+  aws:
     runs-on: ubuntu-latest
     steps:
       - name: Fix aws CLI issue by installing it
