@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: ls -lsa
-      - run: "zip -r output.zip *.py"
+      - run: "zip -r ${{env.ZIP_FILENAME}} *.py"
       - run: sudo apt-get install python3-setuptools
       - run: python3 -m pip install --user awscli
       - name: Configure AWS Credentials
@@ -16,6 +16,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Upload zip to s3
-        run: aws s3 cp output.zip s3://deployment-telegram-bot-github-action/output.zip
+        run: aws s3 cp ${{env.ZIP_FILENAME}} s3://${{env.S3_DEPLOYMENT_BUCKET_NAME}}/${{env.ZIP_FILENAME}}
       - name: Upload code to Lambda from zip
-        run: aws lambda update-function-code --function-name ${{MENU_LAMBDA_FUNCTION_NAME}} --zip-file fileb://output.zip
+        run: aws lambda update-function-code --function-name ${{env.MENU_LAMBDA_FUNCTION_NAME}} --zip-file fileb://${{env.ZIP_FILENAME}}
