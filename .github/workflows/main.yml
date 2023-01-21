@@ -9,7 +9,7 @@ jobs:
     - name: zip
       uses: montudor/action-zip@v0.1.0
       with:
-        args: zip -r output.zip -i '*.py'
+        args: zip -r output.zip .
     - uses: actions/checkout@v1
     - name: AWS Lambda Deploy
       uses: appleboy/lambda-action@master
