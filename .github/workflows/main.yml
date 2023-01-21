@@ -8,7 +8,7 @@ jobs:
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -r output.zip .
+          args: zip -r output.zip -i "*.py"
   deploy:
     needs: zips
     runs-on: ubuntu-latest
