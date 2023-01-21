@@ -1,6 +1,5 @@
 import json
 import os
-import requests
 import helpers
 import boto3
 
@@ -51,7 +50,7 @@ def lambda_handler(event, context):
     except IndexError:
         print("Got invalid command")
         bot_response = "Got invalid command. Use € as a separator "
-    helpers.send_bot_message(bot_response,)
+    helpers.send_bot_message(bot_response, )
     return {
     'statusCode': 200,
     'body': bot_response
