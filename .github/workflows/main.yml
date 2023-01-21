@@ -1,16 +1,14 @@
 name: deploy to lambda
 on: [push]
 jobs:
-  zip:
+    deploy:
     runs-on: ubuntu-latest
     steps:
+#      generate zip
       - uses: actions/checkout@v1
       - run: ls -lsa
-      - run: zip -r ${{ vars.ZIP_FILENAME }} listener/*.py
-  aws:
-    needs: zip
-    runs-on: ubuntu-latest
-    steps:
+      - run: zip -r ${{ vars.ZIP_FILENAME }} ./listener/*.py
+#      aws stuff
       - name: Fix aws CLI issue by installing it
         run: sudo apt-get install python3-setuptools && python3 -m pip install --user awscli
       - name: Configure AWS Credentials
