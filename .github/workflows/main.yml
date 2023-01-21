@@ -6,15 +6,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: ls -lsa
-      - run: "zip -r output.zip *.py"
+#      - run: "zip -r output.zip *.py"
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -r output.zip *.py
-  deploy:
-    needs: zips
-    runs-on: ubuntu-latest
-    steps:
       - name: AWS Lambda Deploy
         uses: appleboy/lambda-action@master
         with:
@@ -24,3 +20,4 @@ jobs:
           function_name: telegram_bot_listener
           zip_file: output.zip
           dry_run: true
+
