@@ -29,7 +29,7 @@ def get_sites_array_from_s3():
 
 def notify_if_hit(site_obj):
     if not site_obj['url'].startswith('http'):
-        print(f"Site didn't start with URL - {site_obj['url']}.Skipping..")
+        print(f"Site didn't start with URL - {site_obj['url']}.Skipping...")
         return
     if site_obj['enabled'] == "false":
         print(f"Site is disabled - {site_obj['url']}.Skipping..")
