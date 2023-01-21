@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: ls -lsa
-      - run: "zip -r ${{env.ZIP_FILENAME}} *.py"
+      - run: zip -r ${{env.ZIP_FILENAME}} *.py
       - run: sudo apt-get install python3-setuptools
       - run: python3 -m pip install --user awscli
       - name: Configure AWS Credentials
