@@ -15,22 +15,22 @@ def user_message_to_bot_response(message):
     if message.startswith("/list") :
         return helpers.list_sites()
     elif message.startswith("/add"):
-        arguments = message.split("€")
+        arguments = message.split(" ")
         keyword = arguments[1]
         url = arguments[2]
         return helpers.add_site(keyword, url)
     elif message.startswith("/resume"):
-        arguments = message.split("€")
+        arguments = message.split(" ")
         site_id = str(arguments[1])
         print(f"request to resume id {site_id}")
         return helpers.resume_site(site_id)
     elif message.startswith("/delete"):
-        arguments = message.split("€")
+        arguments = message.split(" ")
         site_id = str(arguments[1])
         print(f"request to delete id {site_id}")
         return helpers.delete_site(site_id)
     elif message.startswith("/stop"):
-        arguments = message.split("€")
+        arguments = message.split(" ")
         site_id = str(arguments[1])
         print(f"request to stop id {site_id}")
         return helpers.stop_site(site_id)
