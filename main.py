@@ -70,7 +70,7 @@ def list_sites():
     for index, site in enumerate(sites_array):
         # TODO find smarter way to do inline if althogh it's python
         status = "disabled"
-        if site["enabled"]:
+        if site["enabled"] == "true":
             status = "enabled"
         output += f"{index} : \"{site['keyword']}\" keyword, {status} {site['url']}\n"
     # print(f"got sites list: {sites_array}")
@@ -83,7 +83,7 @@ def stop_site(site_id):
     for i, site in enumerate(json_data):
         if str(i) == site_id:
             print(f"found site to stop: {site}")
-            site['enabled'] = "false"
+            json_data[i]['enabled'] = "false"
             s3 = get_boto_client()
             s3.put_object(Bucket=BUCKET_NAME, Key=JSON_FILENAME, Body=json.dumps(json_data))
             # bot.send_message(chat_id=update.message.chat_id, text='Site {} stopped.'.format(site['url']))
@@ -129,7 +129,7 @@ def print_helper():
     print(f"")
 
 def main():
-    message = "/help"
+    message = os.environ['MESSAGE']
     #  TODO - use legit parser here to parse like a normal humanbeing and not like a peasant
     if message == "/list" :
         list_sites()
