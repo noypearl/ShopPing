@@ -97,5 +97,5 @@ def send_bot_message(text):
 
 
 def get_helper_message():
-    message = "Shopper - Telegram shopping bot! \n\nThis bot takes url of website to check and keyword of out-of-stock meaning so that when this keyword won't exist in the website anymore - you'll get a notification and know that the item is in stock!!\nSupported commands:\n/list - see a list of all the sites\n/add [keyword] [url] - add new site with keyword of 'missing item' to search and url of website.\n/resume [index] - resume the bot of a specific site by index from list\n/stop [index]  - stop the bot of a specific site by index from list\n/delete [index]  - delete the bot of a specific site by index from list"
+    message = "Shopper - Telegram shopping bot! \n\nThis bot takes url of website to check and keyword of out-of-stock meaning so that when this keyword won't exist in the website anymore - you'll get a notification and know that the item is in stock!!\n\nSupported commands:\n/list - see a list of all the sites\n/add [keyword] [url] - add new site with keyword of 'missing item' to search and url of website.\n/resume [index] - resume the bot of a specific site by index from list\n/stop [index]  - stop the bot of a specific site by index from list\n/delete [index]  - delete the bot of a specific site by index from list"
     return message
