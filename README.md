@@ -48,5 +48,4 @@ from this bot and know that the item is back in stock!!
 /listener - Lambda function code that's triggerred by the Telegram Webhook. 
 <br>
 /cron_parser - Lambda function code that parses each one of the monitored websites. Sends a message in Telegram when an item is back in stock.  
-<br>
 /.git/workflows/ - Two workflows for each one of the directories that run by path - for simlifying the deployment process.
