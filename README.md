@@ -53,7 +53,6 @@ from this bot and know that the item is back in stock!!
 ## Howto
 In order to use the same AWS environment that I had, you need to setup a few things.
 ### Environment Variables / Secrets
-#### [In the Lambdas](https://github.com/noypearl/ShopPing/blob/299f5e6393b92c47d9b0002de990cef0137bdcdf/listener/helpers.py#L7)
 
 |Component|Description|File
 |-------------------------------|-----------------------------|-----------------------------|
