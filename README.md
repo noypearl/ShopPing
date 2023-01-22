@@ -95,7 +95,10 @@ In order to use the same AWS environment that I had, you need to setup a few thi
   - S3 Bucket - configure 2 buckets - 1st for your sites.json file and 2nd for your deployment zipped code
   - S3 <-> Lambdas - you need to enable communication between your S3 sites.json bucket and your lambdas. Read about AWS policies to understand how
   
-  <img src="https://user-images.githubusercontent.com/11259340/213937369-223c5b8f-6ce6-471b-81a7-bc45800fa01c.png" width="450" alt="cronjob lambda in aws"> <img src="https://user-images.githubusercontent.com/11259340/213937144-ea2c4461-3aa9-4eb4-a474-69087c60d5f9.png" width="450" alt="parser lambda in aws">
+  #### screenshots of configurations
+  <img src="https://user-images.githubusercontent.com/11259340/213937369-223c5b8f-6ce6-471b-81a7-bc45800fa01c.png" width="350" alt="cronjob lambda in aws"> <img src="https://user-images.githubusercontent.com/11259340/213937144-ea2c4461-3aa9-4eb4-a474-69087c60d5f9.png" width="350" alt="parser lambda in aws">
 
-  
+  <img src="https://user-images.githubusercontent.com/11259340/213937529-f18dbf4a-0e46-4496-8fc0-96be3dab2a64.png" width="350" alt="calling lambda from API Gateway"><img src="https://user-images.githubusercontent.com/11259340/213937627-6e8e64e9-a54f-4215-888f-2d85fdb2a447.png" width="350" alt="S3 deployment bucket">
+
+
   
