@@ -41,7 +41,7 @@ from this bot and know that the item is back in stock!!
   |`/add [keyword] [url] `| Add a website to monitor
   |`/stop [website_id]`| Stop monitoring a specific website
   |`/resume [website_id]`| Resume monitoring a specific website
-  |`/delete [website_id]`| Add a website to monitor
+  |`/delete [website_id]`| Delete a specific website from list
   
 
 ## Files & directories
